@@ -11,6 +11,7 @@ import { string } from "@poppinss/utils/build/helpers";
 import { createHash, createPrivateKey, KeyObject } from "crypto";
 import { ProviderToken } from "@adonisjs/auth/build/src/Tokens/ProviderToken";
 import JwtAuthenticationException from "../Exceptions/JwtAuthenticationException";
+
 import {
     JWTGuardConfig,
     JWTGuardContract,
@@ -25,6 +26,7 @@ import {
 } from "@ioc:Adonis/Addons/Jwt";
 import { JwtProviderToken } from "../ProviderToken/JwtProviderToken";
 
+const authHeader = process.env.JWT_AUTH_HEADER || "Authorization";
 /**
  * JWT token represents a persisted token generated for a given user.
  *
@@ -467,7 +469,7 @@ export class JWTGuard extends BaseGuard<"jwt"> implements JWTGuardContract<any, 
         /**
          * Ensure the "Authorization" header value exists
          */
-        const token = this.ctx.request.header("Authorization");
+        const token = this.ctx.request.header(authHeader);
         if (!token) {
             throw new JwtAuthenticationException("No Authorization header passed");
         }
